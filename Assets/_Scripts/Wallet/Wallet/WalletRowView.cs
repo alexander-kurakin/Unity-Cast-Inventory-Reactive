@@ -10,30 +10,31 @@ public class WalletRowView : MonoBehaviour
     private Wallet _wallet;
     private CurrencyType _currencyType;
 
+    private ReactiveVariable<int> _currencyData;
+
     public void InitRow(
     Sprite spriteToSet,
-    int valueToSet,
     Wallet wallet,
     CurrencyType currencyType)
     {
         _iconImage.sprite = spriteToSet;
-        _currencyText.text = valueToSet.ToString();
-
-        _currencyType = currencyType;
         _wallet = wallet;
 
-        _wallet.Changed += OnChanged;
+        _currencyType = currencyType;
+        _currencyData = _wallet.GetCurrency(currencyType);
+        _currencyText.text = _currencyData.Value.ToString();
+
+        _currencyData.Changed += OnCurrencyChanged;
 
     }
 
     private void OnDestroy()
     {
-        _wallet.Changed -= OnChanged;
+        _currencyData.Changed -= OnCurrencyChanged;
     }
 
-    private void OnChanged(CurrencyType currencyTypeOnChanged, int valueToSet)
+    private void OnCurrencyChanged(int oldValue, int newValue)
     {
-        if (currencyTypeOnChanged == _currencyType)
-            _currencyText.text = valueToSet.ToString();
+        _currencyText.text = newValue.ToString();
     }
 }

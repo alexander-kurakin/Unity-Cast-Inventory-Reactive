@@ -891,8 +891,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _walletView: {fileID: 1791793639}
   _timerView: {fileID: 1575862395}
+  _configuredCurrency: 000000000100000002000000
   _walletMaxValue: 9999
-  _walletStartingValue: 0
   _defaultTimerValue: 10
 --- !u!1 &1791793638
 GameObject:

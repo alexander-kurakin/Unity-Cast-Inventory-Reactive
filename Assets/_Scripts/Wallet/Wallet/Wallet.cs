@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Wallet
 {
-    public event Action<CurrencyType, int> Changed;
+    private Dictionary<CurrencyType, ReactiveVariable<int>> _currencyData;
 
-    private Dictionary<CurrencyType, int> _currencyData;
-
-    public Wallet(int maxValue, Dictionary<CurrencyType, int> currencyData)
+    public Wallet(int maxValue, List<CurrencyType> currencyData)
     {
         if (maxValue < 0)
         {
@@ -18,15 +16,19 @@ public class Wallet
 
         MaxValue = maxValue;
 
-        _currencyData = new Dictionary<CurrencyType, int>(currencyData);
+        _currencyData = new Dictionary<CurrencyType, ReactiveVariable<int>>();
+
+        foreach (CurrencyType type in currencyData)
+            _currencyData[type] = new ReactiveVariable<int>();
     }
 
     public int MaxValue { get; private set; }
+    public ReactiveVariable<int> GetCurrency(CurrencyType type) => _currencyData[type];
 
-    public bool IsEnoughCapacity(CurrencyType type, int value) => _currencyData[type] + value <= MaxValue;
-    public bool IsWalletEmpty(CurrencyType type, int value) => _currencyData[type] - value <= 0;
+    public bool WillExceedMaxValue(CurrencyType type, int value) => _currencyData[type].Value + value > MaxValue;
+    public bool WillGoBelowZero(CurrencyType type, int value) => _currencyData[type].Value - value <= 0;
 
-    public void Add(CurrencyType type, int value) 
+    public void Add(CurrencyType type, int value)
     {
         if (value < 0)
         {
@@ -34,19 +36,13 @@ public class Wallet
             return;
         }
 
-        if (IsEnoughCapacity(type, value) == false)
+        if (WillExceedMaxValue(type, value))
         {
-            if (_currencyData[type] != MaxValue)
-            {
-                _currencyData[type] = MaxValue;
-                Changed?.Invoke(type, _currencyData[type]);
-            }
-
+            _currencyData[type].Value = MaxValue;
             return;
         }
 
-        _currencyData[type] += value;
-        Changed?.Invoke(type, _currencyData[type]);
+        _currencyData[type].Value += value;
     }
 
     public void Remove(CurrencyType type, int value)
@@ -57,18 +53,12 @@ public class Wallet
             return;
         }
 
-        if (IsWalletEmpty(type, value) ) 
+        if (WillGoBelowZero(type, value))
         {
-            if (_currencyData[type] != 0)
-            {
-                _currencyData[type] = 0;
-                Changed?.Invoke(type, _currencyData[type]);
-            }
-
+            _currencyData[type].Value = 0;
             return;
         }
 
-        _currencyData[type] -= value;
-        Changed?.Invoke(type, _currencyData[type]);
+        _currencyData[type].Value -= value;
     }
 }

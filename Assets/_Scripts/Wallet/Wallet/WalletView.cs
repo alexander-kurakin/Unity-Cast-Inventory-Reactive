@@ -8,12 +8,10 @@ public class WalletView : MonoBehaviour
     [SerializeField] private Transform _UIObjectsParent;
 
     private Wallet _wallet;
-    private Dictionary<CurrencyType, int> _configuredCurrency;
+    private List<CurrencyType> _configuredCurrency;
     private Dictionary<CurrencyType, CurrencyConfig> _currencyConfigsByType;
 
-    private int _walletStartingValue;
-
-    public void InitWallet(Wallet wallet, Dictionary<CurrencyType, int> configuredCurrency, int walletStartingValue)
+    public void InitWallet(Wallet wallet, List<CurrencyType> configuredCurrency)
     {
         _currencyConfigsByType = new Dictionary<CurrencyType, CurrencyConfig>();
 
@@ -21,33 +19,31 @@ public class WalletView : MonoBehaviour
             _currencyConfigsByType[currencyConfigEntry.type] = currencyConfigEntry.config;
 
         _wallet = wallet;
-        _configuredCurrency = new Dictionary<CurrencyType, int>(configuredCurrency);
-        _walletStartingValue = walletStartingValue;
+        _configuredCurrency = new List<CurrencyType>(configuredCurrency);
 
         SpawnUI();
     }
 
     private void SpawnUI()
     {
-        foreach (KeyValuePair<CurrencyType, int> currencyData in _configuredCurrency)
+        foreach (CurrencyType type in _configuredCurrency)
         {
             WalletRowView _walletRowView = Instantiate(_walletRowViewPrefab, _UIObjectsParent);
 
             if (_walletRowView.TryGetComponent<WalletRowControl>(out WalletRowControl _walletRowControl))
             {
-                CurrencyConfig currencyConfig = _currencyConfigsByType[currencyData.Key];
+                CurrencyConfig currencyConfig = _currencyConfigsByType[type];
 
                 _walletRowView.InitRow(
                     currencyConfig.sprite,
-                    _walletStartingValue,
                     _wallet,
-                    currencyData.Key);
+                    type);
 
                 _walletRowControl.InitRow(
                     currencyConfig.increment,
                     currencyConfig.decrement,
                     _wallet,
-                    currencyData.Key);
+                    type);
             }
         }
     }
