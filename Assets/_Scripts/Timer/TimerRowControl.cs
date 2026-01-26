@@ -24,9 +24,9 @@ public class TimerRowControl : TimerRowBase
         _stopButton.onClick.RemoveListener(OnStopClick);
     }
 
-    protected override void OnElapsedTimeChanged(float elapsedTime)
+    protected override void OnElapsedTimeChanged(float oldElapsedTime, float newElapsedTime)
     {
-        _timerText.text = elapsedTime.ToString("0.00");
+        _timerText.text = newElapsedTime.ToString("0.00");
     }
 
     private void OnStartClick()

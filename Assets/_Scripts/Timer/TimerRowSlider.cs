@@ -11,8 +11,8 @@ public class TimerRowSlider : TimerRowBase
         _timerSlider.value = _timerSlider.maxValue;
     }
 
-    protected override void OnElapsedTimeChanged(float elapsedTime)
+    protected override void OnElapsedTimeChanged(float oldElapsedTime, float newElapsedTime)
     {
-        _timerSlider.value = elapsedTime;
+        _timerSlider.value = newElapsedTime;
     }
 }

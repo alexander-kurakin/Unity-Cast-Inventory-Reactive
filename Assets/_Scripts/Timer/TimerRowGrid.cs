@@ -13,9 +13,9 @@ public class TimerRowGrid : TimerRowBase
         SpawnGrid(_timer.TimerValue);
     }
 
-    protected override void OnElapsedTimeChanged(float elapsedTime)
+    protected override void OnElapsedTimeChanged(float oldElapsedTime, float newElapsedTime)
     {
-        UpdateGrid(elapsedTime);
+        UpdateGrid(newElapsedTime);
     }
 
     private void SpawnGrid(float timerValue)

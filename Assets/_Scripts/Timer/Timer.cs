@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Timer
 {
-    public event Action<float> ElapsedTimeChanged;
-
     private float _timerValue;
-    private float _elapsedTime;
+    private ReactiveVariable<float> _elapsedTime;
     private float _cachedElapsedTime = 0f;
 
     private MonoBehaviour _coroutineRunner;
@@ -18,6 +16,8 @@ public class Timer
     {
         _coroutineRunner = coroutineRunner;
         _timerValue = timerValue;
+
+        _elapsedTime = new ReactiveVariable<float>(timerValue);
     }
 
     public float TimerValue => _timerValue;
@@ -30,18 +30,16 @@ public class Timer
 
     public void Pause()
     {
-        _cachedElapsedTime = _elapsedTime;
+        _cachedElapsedTime = _elapsedTime.Value;
 
-        ElapsedTimeChanged?.Invoke(_cachedElapsedTime);
         StopAndClearProcess();
     }
 
     public void Stop()
     {
-        _elapsedTime = TimerValue;
+        _elapsedTime.Value = TimerValue;
         _cachedElapsedTime = 0f;
 
-        ElapsedTimeChanged?.Invoke(_elapsedTime);
         StopAndClearProcess();
     }
 
@@ -54,25 +52,28 @@ public class Timer
         }
     }
 
+    private void SetElapsedTime(float value)
+    {
+        _elapsedTime.Value = Mathf.Max(0f, value);
+    }
+
+    public ReactiveVariable<float> GetElapsedTime => _elapsedTime;
+
     private IEnumerator Process()
     {
         if (_cachedElapsedTime == 0f)
         {
-            _elapsedTime = TimerValue;
+            _elapsedTime.Value = TimerValue;
         }
         else
         {
-            _elapsedTime = _cachedElapsedTime;
+            _elapsedTime.Value = _cachedElapsedTime;
             _cachedElapsedTime = 0f;
         }
 
-        while (_elapsedTime > 0)
+        while (_elapsedTime.Value > 0)
         {
-            _elapsedTime -= Time.deltaTime;
-            ElapsedTimeChanged?.Invoke(_elapsedTime);
-
-            if (_elapsedTime < 0)
-                _elapsedTime = 0;
+            SetElapsedTime(_elapsedTime.Value - Time.deltaTime);
 
             yield return null;
         }

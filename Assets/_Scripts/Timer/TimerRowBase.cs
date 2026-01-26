@@ -7,16 +7,16 @@ public abstract class TimerRowBase : MonoBehaviour
     public void Init(Timer timer)
     {
         _timer = timer;
-        _timer.ElapsedTimeChanged += OnElapsedTimeChanged;
+        _timer.GetElapsedTime.Changed += OnElapsedTimeChanged;
         AfterInit(timer);
     }
 
     protected abstract void AfterInit(Timer timer);
 
-    protected abstract void OnElapsedTimeChanged(float elapsedTime);
+    protected abstract void OnElapsedTimeChanged(float oldElapsedTime, float newElapsedTime);
 
     protected virtual void OnDestroy()
     {
-        _timer.ElapsedTimeChanged -= OnElapsedTimeChanged;
+        _timer.GetElapsedTime.Changed -= OnElapsedTimeChanged;
     }
 }
