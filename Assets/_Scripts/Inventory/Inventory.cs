@@ -1,39 +1,78 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using UnityEngine;
 
 public class Inventory
 {
-    public List<Item> _items = new();
+    private List<InventoryCell> _cells = new();
+    private int _maxCapacity;
 
-    public int CurrentSize => _items.Sum(item => item.Count);
-
-    public int MaxSize;
-
-    public Inventory(List<Item> items, int maxSize)
+    public Inventory(List<InventoryCell> cells, int maxSize)
     {
-        _items = items;
+        _cells = new List<InventoryCell>(cells);
+
+        if (maxSize < CurrentSize)
+            throw new ArgumentOutOfRangeException(nameof(maxSize), maxSize, $"Переданный максимальный размер {maxSize} меньше текущего размера {CurrentSize}");
+
         MaxSize = maxSize;
     }
 
-    public void Add(Item item)
+    public int MaxSize { get; }
+
+    public int CurrentSize => _cells.Sum(cells => cells.Count);
+
+    public IReadOnlyList<IReadOnlyInventoryCell> Cells => _cells;
+
+    public bool TryAdd(Item item, int count)
     {
-        if (CurrentSize + item.Count > MaxSize)
-            return;
-
-        _items.Add(item);
-    }
-
-    public List<Item> GetItemsBy(string name, int count)
-    {
-        _items = new List<Item>();
-
-        for (int i = 0; i < count; i++)
+        if (item == null || count <= 0)
         {
-            Item item = _items.First(item => item.Name == name);
-            _items.Remove(item);
+            Debug.LogError($"Параметры заданы некорректно: item={item}, count={count}");
+            return false;
         }
 
-        return _items;
+        if (CurrentSize + count > MaxSize)
+        {
+            Debug.LogError($"Добавляемое количество {count} превышает максимальную вместимость инвентаря {MaxSize}, текущая вместимость {CurrentSize}");
+            return false;
+        }
+
+        InventoryCell cell = _cells.FirstOrDefault(cell => cell.Item.Equals(item));
+
+        if (cell != null)
+        {
+            cell.Add(count);
+            Debug.Log($"Найдена текущая ячейка - пытаемся добавить в нее {count}. Текущее количество {cell.Count}");
+            return true;
+        } else
+        {
+            _cells.Add(new InventoryCell(item, count));
+            Debug.Log("Нет такого предмета, создаем новую ячейку");
+            return true;
+        }
     }
+
+    public IReadOnlyList<IReadOnlyInventoryCell> GetItemsByName (string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentNullException(nameof(name));
+
+        IReadOnlyList<IReadOnlyInventoryCell> resultList =
+            Cells.Where((IReadOnlyInventoryCell cell) => cell.Item.Name == name).ToList();
+
+        return resultList;
+    }
+
+    public IReadOnlyList<(string Name, int Count)> GetAllItems()
+    {
+        if (Cells.Count == 0)
+            return null;
+
+        IReadOnlyList<(string Name, int Count)> resultList =
+            Cells.Select((IReadOnlyInventoryCell cell) => (cell.Item.Name, cell.Count)).ToList();
+
+        return resultList;
+    }
+
 }

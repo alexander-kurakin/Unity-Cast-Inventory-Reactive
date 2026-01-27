@@ -1,5 +1,9 @@
-public class Item
+public class Item : IReadOnlyItem
 {
-    public string Name;
-    public int Count;
+    public string Name { get; }
+
+    public Item(string name)
+    {
+        Name = name;
+    }
 }
