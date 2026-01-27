@@ -271,8 +271,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: -0.03713332, y: 0.9591616, z: -0.2365636, w: -0.15055855}
+  m_LocalPosition: {x: 11.272688, y: 12.6829815, z: 22.537945}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -843,12 +843,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orkConfigs:
-  - {fileID: 0}
-  _elfConfigs: []
-  _dragonConfigs: []
-  _orkPrefab: {fileID: 0}
-  _elfPrefab: {fileID: 0}
-  _dragonPrefab: {fileID: 0}
+  - <Damage>k__BackingField: 60
+    <Rage>k__BackingField: 40
+  - <Damage>k__BackingField: 40
+    <Rage>k__BackingField: 20
+  - <Damage>k__BackingField: 50
+    <Rage>k__BackingField: 50
+  _elfConfigs:
+  - <Intelligence>k__BackingField: 45
+    <Damage>k__BackingField: 55
+    <Agility>k__BackingField: 65
+  - <Intelligence>k__BackingField: 33
+    <Damage>k__BackingField: 25
+    <Agility>k__BackingField: 95
+  - <Intelligence>k__BackingField: 95
+    <Damage>k__BackingField: 95
+    <Agility>k__BackingField: 95
+  _dragonConfigs:
+  - <Strength>k__BackingField: 50
+    <Damage>k__BackingField: 200
+    <FireballSize>k__BackingField: 5
+  - <Strength>k__BackingField: 75
+    <Damage>k__BackingField: 150
+    <FireballSize>k__BackingField: 10
+  - <Strength>k__BackingField: 150
+    <Damage>k__BackingField: 150
+    <FireballSize>k__BackingField: 25
+  _minSpawnRadius: 5
+  _maxSpawnRadius: 25
+  _orkPrefab: {fileID: 9024874486159255370, guid: 6c74da68d933635479c15f613f05e064,
+    type: 3}
+  _elfPrefab: {fileID: -3786759871876658771, guid: 33d96bc0fbb547a40b435e4c6da868c3,
+    type: 3}
+  _dragonPrefab: {fileID: -5596081707825895029, guid: 6836de3d369291043832cd011ae12520,
+    type: 3}
 --- !u!1 &1575862393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1048,8 +1076,8 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 1779108615}
   - {fileID: 1119671221}
   - {fileID: 1294819737}
   - {fileID: 2053672659}
+  - {fileID: 1779108615}
   - {fileID: 1486074317}

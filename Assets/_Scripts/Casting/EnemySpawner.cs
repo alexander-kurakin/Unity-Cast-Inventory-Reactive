@@ -22,15 +22,18 @@ public class EnemySpawner
             case OrkConfig orkConfig:
                 Ork ork = Object.Instantiate(_orkPrefab, position, Quaternion.identity);
                 ork.Init(orkConfig);
+                Debug.Log("Spawning Ork " + orkConfig.Damage + "|" + orkConfig.Rage);
                 return ork;
 
             case ElfConfig elfConfig:
                 Elf elf = Object.Instantiate(_elfPrefab, position, Quaternion.identity);
                 elf.Init(elfConfig);
+                Debug.Log("Spawning Elf " + elfConfig.Damage + "|" + elfConfig.Intelligence + "|" + elfConfig.Agility);
                 return elf;
 
             case DragonConfig dragonConfig:
                 Dragon dragon = Object.Instantiate(_dragonPrefab, position, Quaternion.identity);
+                Debug.Log("Spawning Dragon " + dragonConfig.Damage + "|" + dragonConfig.Damage + "|" + dragonConfig.FireballSize);
                 return dragon;
 
             default:
