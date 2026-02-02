@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconImage: {fileID: 1419908649122465280}
-  _currencyText: {fileID: 1591204026087772026}
+  _text: {fileID: 1591204026087772026}
 --- !u!1 &3322782344507810406
 GameObject:
   m_ObjectHideFlags: 0
