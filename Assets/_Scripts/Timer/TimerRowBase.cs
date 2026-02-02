@@ -9,6 +9,8 @@ public abstract class TimerRowBase : MonoBehaviour
         _timer = timer;
         _timer.GetElapsedTime.Changed += OnElapsedTimeChanged;
         AfterInit(timer);
+
+        //_timer.GetElapsedTime = 0f; cannot do, readonly
     }
 
     protected abstract void AfterInit(Timer timer);
