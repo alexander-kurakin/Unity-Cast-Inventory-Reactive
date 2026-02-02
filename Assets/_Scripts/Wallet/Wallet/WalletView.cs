@@ -10,6 +10,7 @@ public class WalletView : MonoBehaviour
     private Wallet _wallet;
     private List<CurrencyType> _configuredCurrency;
     private Dictionary<CurrencyType, CurrencyConfig> _currencyConfigsByType;
+    private ReactiveVariable<int> _currencyData;
 
     public void InitWallet(Wallet wallet, List<CurrencyType> configuredCurrency)
     {
@@ -30,14 +31,15 @@ public class WalletView : MonoBehaviour
         {
             WalletRowView _walletRowView = Instantiate(_walletRowViewPrefab, _UIObjectsParent);
 
+            _currencyData = _wallet.GetCurrency(type);
+
             if (_walletRowView.TryGetComponent<WalletRowControl>(out WalletRowControl _walletRowControl))
             {
                 CurrencyConfig currencyConfig = _currencyConfigsByType[type];
 
                 _walletRowView.InitRow(
                     currencyConfig.sprite,
-                    _wallet,
-                    type);
+                    _currencyData);
 
                 _walletRowControl.InitRow(
                     currencyConfig.increment,

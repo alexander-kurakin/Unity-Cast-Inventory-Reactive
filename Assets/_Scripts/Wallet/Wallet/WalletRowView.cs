@@ -5,36 +5,31 @@ using UnityEngine.UI;
 public class WalletRowView : MonoBehaviour
 {
     [SerializeField] private Image _iconImage;
-    [SerializeField] private TMP_Text _currencyText;
+    [SerializeField] private TMP_Text _text;
 
-    private Wallet _wallet;
-    private CurrencyType _currencyType;
-
-    private ReactiveVariable<int> _currencyData;
-
+    private IReadOnlyReactiveVariable<int> _reactiveNumberToShow;
+ 
     public void InitRow(
     Sprite spriteToSet,
-    Wallet wallet,
-    CurrencyType currencyType)
+    IReadOnlyReactiveVariable<int> reactiveNumberToShow)
     {
         _iconImage.sprite = spriteToSet;
-        _wallet = wallet;
+        _reactiveNumberToShow = reactiveNumberToShow;
+        _text.text = _reactiveNumberToShow.Value.ToString();
 
-        _currencyType = currencyType;
-        _currencyData = _wallet.GetCurrency(currencyType);
-        _currencyText.text = _currencyData.Value.ToString();
+        _reactiveNumberToShow.Changed += OnReactiveNumberChanged;
 
-        _currencyData.Changed += OnCurrencyChanged;
+        //_reactiveNumberToShow.Value = 9999; cannot do, readonly variable
 
     }
 
     private void OnDestroy()
     {
-        _currencyData.Changed -= OnCurrencyChanged;
+        _reactiveNumberToShow.Changed -= OnReactiveNumberChanged;
     }
 
-    private void OnCurrencyChanged(int oldValue, int newValue)
+    private void OnReactiveNumberChanged(int oldValue, int newValue)
     {
-        _currencyText.text = newValue.ToString();
+        _text.text = newValue.ToString();
     }
 }

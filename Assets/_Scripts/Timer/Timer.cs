@@ -57,7 +57,7 @@ public class Timer
         _elapsedTime.Value = Mathf.Max(0f, value);
     }
 
-    public ReactiveVariable<float> GetElapsedTime => _elapsedTime;
+    public IReadOnlyReactiveVariable<float> GetElapsedTime => _elapsedTime;
 
     private IEnumerator Process()
     {
